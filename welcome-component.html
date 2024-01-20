@@ -1,0 +1,6 @@
+<div x-show="user">
+    <template x-if="user">
+        <h2>Welcome, <span x-text="user.name"></span>!</h2>
+    </template>
+    <button @click="logout()">Logout</button>
+</div>

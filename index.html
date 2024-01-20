@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+</head>
+
+<body>
+    <div x-data="userHandler()" x-init="checkUser()">
+        <!--insert login-component.html here  -->
+        <div hx-get="login-component.html" hx-trigger="load" hx-swap="outerHTML"></div>
+        <div hx-get="welcome-component.html" hx-trigger="load" hx-swap="outerHTML"></div>
+        <!-- insert welcome-component.html here -->
+    </div>
+
+    <script>
+        // let userDB;
+        // function initUserDatabase() {
+        //     if (!sessionStorage.getItem('userDatabase')) {
+        //         sessionStorage.setItem('userDatabase', JSON.stringify({ 'user1': { 'name': 'John' }, 'user2': { 'name': 'Jane' } }));
+        //     }
+        //     userDB = JSON.parse(sessionStorage.getItem('userDatabase'));
+        //     console.log(userDB);
+
+        // }
+        // initUserDatabase();
+        function userHandler() {
+            let userDB = JSON.parse(sessionStorage.getItem('userDatabase')) || { 'user1': { 'name': 'John', 'job': 'cool job' }, 'user2': { 'name': 'Jane' } };
+            console.log(userDB);
+            function doesUserExist(username) {
+                for (let key in userDB) {
+                    if (userDB[key].name === username) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return {
+                user: null,
+                loginUserName: '',
+                createdUserName: '',
+                login() {
+                    if (doesUserExist(this.loginUserName)) {
+                        console.log("user is " + this.loginUserName);
+                        for (let key in userDB) {
+                            if (userDB[key].name === this.loginUserName) {
+                                this.user = userDB[key];
+                                break;
+                            }
+                        }
+                        this.loginUserName = '';
+                    } else {
+                        console.log("please enter a valid user name");
+                    }
+                },
+                logout() {
+                    this.user = null;
+                    console.log('all users logged out');
+                },
+                checkUser() {
+
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
